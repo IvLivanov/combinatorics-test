@@ -136,13 +136,16 @@ def pack_children(k_groups, tot_spaces_small, tot_spaces_med):
      if not insert_children(group, st.session_state.show_dict[group], st.session_state.space_dict[group]):
        create_show(df, st.session_state.show_dict[group], 20)
   st.table(st.session_state.current_schedule)
-  download_
-  data = pd.DataFrame(st.session_state.current_schedule)
-  st.table(data)
-  st.download_button('download table', data = pd.DataFrame.to_csv(data,index=False),)
+  download_schedule(st.session_state.current_schedule)
+  
 
 def insert_children(group, show, total_spaces):
   clas = st.session_state.table_dict_cur[group]['classes'][-1]
+  if clas > st.session_state.space_dict[group]:
+    clasname = str(len(st.session_state.table_dict_cur[group]['classes'])) + ' ' + group
+    st.write("class {} is too big for this planetarium and will not be considered".format(clasname))
+    st.session_state.table_dict_cur[group]['classes'].pop()
+    return True
   for num, slot in enumerate(st.session_state.current_schedule):
       if slot['show'] == show and slot['pupils'] + clas <= total_spaces:
         st.session_state.current_schedule[num]['pupils'] = slot['pupils'] + clas
@@ -177,6 +180,13 @@ def time_offset(timeval, mins_to_add):
     return datetime.time(hours, minutes, seconds)
 
 
+def download_schedule(data):
+  df = pd.DataFrame(data)
+  st.download_button(
+      label="Download Schedule",
+      data= df.to_csv(index = False),
+      file_name="schedule.csv"
+  )
 
 
 
