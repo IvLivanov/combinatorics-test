@@ -1,0 +1,10 @@
+{
+    "small": {
+        "relax": 35,
+        "tight": 45
+    },
+    "medium": {
+        "relax": 30,
+        "tight": 35
+    }
+}
